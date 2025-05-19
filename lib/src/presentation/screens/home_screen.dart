@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                'Error: ${state.message}',
+                                state.message,
                               ),
                               const SizedBox(height: 10,),
                               IconButton(
