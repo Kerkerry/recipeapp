@@ -1,0 +1,12 @@
+import 'package:get_it/get_it.dart';
+import 'package:recipeapp/core/helpers/internet_connection_helper.dart';
+import 'package:recipeapp/src/data/datasources/local_datasource/home_db_service.dart';
+import 'package:recipeapp/src/data/datasources/remote_datasource/datasource_implementation/recipe_remote_datasource_implementation.dart';
+import 'package:recipeapp/src/data/repository/recipe_repository_implementation.dart';
+import 'package:recipeapp/src/domain/repository/recipe_repository.dart';
+import 'package:recipeapp/src/domain/usecases/get_recipe.dart';
+import 'package:recipeapp/src/domain/usecases/get_recipes.dart';
+import 'package:recipeapp/src/presentation/bloc/recipe_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'package:hive_flutter/hive_flutter.dart';
+part 'injection_container.dart';
