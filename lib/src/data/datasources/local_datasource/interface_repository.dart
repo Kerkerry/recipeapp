@@ -6,5 +6,6 @@ abstract class InterfaceRepository{
 
   Future getAll();
   Future insertRecipesToLocalDatabase(List object);
+  // Future insertIntoFavorite(Recipe recipe);
   Future<bool> isDataAvailable();
 }

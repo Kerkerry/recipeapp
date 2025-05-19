@@ -81,8 +81,9 @@ class _HomePageState extends State<HomePage> {
         },
         listener: (context, state) async{
           if(state is RecipesLoadedState){
+            final int recipes=state.recipes.length;
             final bool isConnected=await sl<InternetConnectionHelper>().checkConnection();
-            final String serverType=isConnected ? "Fetched from remote server": "Fetched from local server";
+            final String serverType=isConnected ? "Fetched $recipes recipes from remote server": "Fetched $recipes recipes from local server";
             context.mounted?CustomAlert.show(context, serverType):null;
           }
 

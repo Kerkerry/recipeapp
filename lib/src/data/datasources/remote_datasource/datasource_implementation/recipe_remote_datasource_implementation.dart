@@ -9,6 +9,7 @@ import 'package:recipeapp/src/data/datasources/remote_datasource/datasource/reci
 import 'package:http/http.dart' as http;
 import 'package:recipeapp/src/data/models/recipe_model.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
+import 'package:recipeapp/core/helpers/logger_helper.dart';
 class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
   final http.Client _client;
   const RecipeRemoteDatasourceImplementation({required http.Client client}):_client=client;
@@ -32,11 +33,12 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
     final bool isDataAvailable=await sl<HomeDbService>().isDataAvailable();
     try{
       if(isConnected){
-        final response=await _client.get(Uri.https(kBaseUrl,"$recipesEndpoint?limit=50"));
+        // final response=await _client.get(Uri.https(kBaseUrl,recipesEndpoint));
+        final response=await _client.get(Uri.https(kBaseUrl,recipesEndpoint,limit));
+        logger.t(Uri.https(kBaseUrl,"$recipesEndpoint$limit"));
         if(response.statusCode!=200){
           throw(ApiException(statusCode: response.statusCode,message: response.body));
         }
-        // final recipesMap=jsonDecode(response.body)['recipes'];
         sl<HomeDbService>().insertRecipesToLocalDatabase(jsonDecode(response.body)['recipes']);
         final dbResult=await sl<HomeDbService>().getAll();
         return List.from(dbResult).map((recipe)=>RecipeModel.fromMap(recipe)).toList();
@@ -46,7 +48,7 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
           final dbJson=jsonEncode(dbResult);
           return List.from(jsonDecode(dbJson)).map((recipe)=>RecipeModel.fromMap(recipe)).toList();
         }else{
-          throw(const ApiException(statusCode: 505,message: "No data in the local database please connect to fetch from remote"));
+          throw(const ApiException(statusCode: 505,message: "No data in local db"));
         }
       }
     }catch(e){
@@ -55,7 +57,8 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
         final dbJson=jsonEncode(dbResult);
         return List.from(jsonDecode(dbJson)).map((recipe)=>RecipeModel.fromMap(recipe)).toList();
       }else{
-        throw(const ApiException(statusCode: 505,message: "No data in the local database please connect to fetch from remote"));
+        logger.d(e);
+       throw(e);
       }
     }
   }
