@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:recipeapp/core/services/i_path.dart';
+import 'package:recipeapp/src/data/datasources/local_datasource/home_db_service.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
 import 'package:bloc/bloc.dart';
 import 'package:recipeapp/src/domain/usecases/get_recipe.dart';
@@ -21,6 +23,9 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
      {
        on<GetRecipeEvent>(_getRecipeHandler);
        on<GetRecipesEvent>(_getRecipesHandler);
+       on<AddRecipeFavoriteEvent>(_addRecipeFavoriteHandler);
+       on<GetRecipesFavoriteEvent>(_getRecipesFavoriteHandler);
+       on<RemoveRecipeFavoriteEvent>(_removeRecipeFavoriteHandler);
      }
 
   FutureOr<void> _getRecipeHandler(GetRecipeEvent event, Emitter<RecipeState> emit)async {
@@ -39,5 +44,42 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
                (f)=>emit(RecipeErrorState(message: f.errorMessage)),
            (recipes)=>emit(RecipesLoadedState(recipes: recipes))
        );
+  }
+
+  FutureOr<void> _addRecipeFavoriteHandler(AddRecipeFavoriteEvent event, Emitter<RecipeState> emit) async{
+       try{
+         emit(const AddingFavoriteState());
+         await sl<HomeDbService>().addFavorite(event.id);
+         emit(const FavoriteAddedState());
+       }catch(e){
+         emit(RecipeErrorState(message: e.toString()));
+       }
+  }
+
+  FutureOr<void> _getRecipesFavoriteHandler(GetRecipesFavoriteEvent event, Emitter<RecipeState> emit)async {
+    try{
+      emit(const GettingFavoriteRecipesState());
+      final  favs=await sl<HomeDbService>().getFavorites();
+      final List<Recipe> recipes=await sl<HomeDbService>().getAll();
+      final List<Recipe> favRecipes=[];
+      for(final recipe in recipes){
+        if(favs.contains(recipe.id)){
+          favRecipes.add(recipe);
+        }
+      }
+      emit(FavoriteRecipesLoadedState(recipes: recipes));
+    }catch(e){
+      emit(RecipeErrorState(message: e.toString()));
+    }
+  }
+
+  FutureOr<void> _removeRecipeFavoriteHandler(RemoveRecipeFavoriteEvent event, Emitter<RecipeState> emit) async{
+       try{
+         emit(const RemovingFavoriteState());
+         await sl<HomeDbService>().removeFavorite(event.id);
+         emit(const FavoriteRemovedState());
+       }catch(e){
+         emit(RecipeErrorState(message: e.toString()));
+       }
   }
 }

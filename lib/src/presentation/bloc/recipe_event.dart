@@ -21,17 +21,17 @@ class GetRecipeEvent extends RecipeEvent{
   List<Object?> get props => [id];
 }
 
-class AddFavoriteEvent extends RecipeEvent{
+class AddRecipeFavoriteEvent extends RecipeEvent{
   final int id;
-  const AddFavoriteEvent(this.id);
+  const AddRecipeFavoriteEvent(this.id);
 }
 
-class RemoveFavoriteEvent extends RecipeEvent{
+class RemoveRecipeFavoriteEvent extends RecipeEvent{
   final int id;
-  const RemoveFavoriteEvent(this.id);
+  const RemoveRecipeFavoriteEvent(this.id);
 }
 
-class GetFavoriteEvent extends RecipeEvent{
-  const GetFavoriteEvent();
+class GetRecipesFavoriteEvent extends RecipeEvent{
+  const GetRecipesFavoriteEvent();
 }
 

@@ -42,23 +42,20 @@ class GettingFavoriteRecipesState extends RecipeState{
 }
 
 class FavoriteRecipesLoadedState extends RecipeState{
-  final List favorites;
   final List<Recipe> recipes;
-  const FavoriteRecipesLoadedState({required this.favorites, required this.recipes});
+  const FavoriteRecipesLoadedState({required this.recipes});
 }
+
 
 class AddingFavoriteState extends RecipeState{
-  final int id;
-  const AddingFavoriteState({required this.id});
+  const AddingFavoriteState();
 }
-
 class FavoriteAddedState extends RecipeState{
   const FavoriteAddedState();
 }
 
 class RemovingFavoriteState extends RecipeState{
-  final int id;
-  const RemovingFavoriteState({required this.id});
+  const RemovingFavoriteState();
 }
 
 class FavoriteRemovedState extends RecipeState{
