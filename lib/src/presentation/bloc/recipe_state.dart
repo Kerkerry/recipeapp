@@ -42,7 +42,7 @@ class GettingFavoriteRecipesState extends RecipeState{
 }
 
 class FavoriteRecipesLoadedState extends RecipeState{
-  final List<Recipe> recipes;
+  final List recipes;
   const FavoriteRecipesLoadedState({required this.recipes});
 }
 

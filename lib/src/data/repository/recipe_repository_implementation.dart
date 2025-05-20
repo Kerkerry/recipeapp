@@ -26,7 +26,6 @@ class RecipeRepositoryImplementation implements RecipeRepository{
   ResultFuture<List<Recipe>> getRecipes() async{
     try{
       final result=await _dtsrc.getRecipes();
-      logger.i(result);
       return Right(result);
     }on ApiException catch(e){
       logger.d(e);

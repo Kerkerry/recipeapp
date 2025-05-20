@@ -7,6 +7,7 @@ import 'package:recipeapp/core/utils/custom_alert.dart';
 import 'package:recipeapp/core/utils/custom_loading_widget.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
 import 'package:recipeapp/src/presentation/bloc/recipe_bloc.dart';
+import 'package:recipeapp/src/presentation/screens/favorite_screen.dart';
 import 'package:recipeapp/src/presentation/widgets/b_n_b.dart';
 import 'package:recipeapp/src/presentation/widgets/single_list_item.dart';
 
@@ -77,6 +78,12 @@ class _HomePageState extends State<HomePage> {
                       ):
             const SizedBox.shrink(),
             bottomNavigationBar:const BNB(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const FavoriteScreen()));
+              },
+              child:const Icon(Icons.favorite,color: Colors.red),
+            ),
           );
         },
         listener: (context, state) async{
@@ -86,7 +93,6 @@ class _HomePageState extends State<HomePage> {
             final String serverType=isConnected ? "Fetched $recipes recipes from remote server": "Fetched $recipes recipes from local server";
             context.mounted?CustomAlert.show(context, serverType):null;
           }
-
         },
 
     );

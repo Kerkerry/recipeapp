@@ -34,7 +34,6 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
     try{
       if(isConnected){
         final response=await _client.get(Uri.https(kBaseUrl,recipesEndpoint,limit));
-        logger.t(Uri.https(kBaseUrl,"$recipesEndpoint$limit"));
         if(response.statusCode!=200){
           throw(ApiException(statusCode: response.statusCode,message: response.body));
         }

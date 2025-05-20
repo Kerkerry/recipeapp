@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:recipeapp/core/helpers/logger_helper.dart';
 import 'package:recipeapp/core/services/i_path.dart';
 import 'package:recipeapp/src/data/datasources/local_datasource/home_db_service.dart';
+import 'package:recipeapp/src/data/models/recipe_model.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
 import 'package:bloc/bloc.dart';
 import 'package:recipeapp/src/domain/usecases/get_recipe.dart';
@@ -60,14 +63,14 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
     try{
       emit(const GettingFavoriteRecipesState());
       final  favs=await sl<HomeDbService>().getFavorites();
-      final List<Recipe> recipes=await sl<HomeDbService>().getAll();
+      final List recipes=await sl<HomeDbService>().getAll();
       final List<Recipe> favRecipes=[];
       for(final recipe in recipes){
-        if(favs.contains(recipe.id)){
-          favRecipes.add(recipe);
+        if(favs.contains(recipe['id'])){
+          favRecipes.add(RecipeModel.fromMap(recipe));
         }
       }
-      emit(FavoriteRecipesLoadedState(recipes: recipes));
+      emit(FavoriteRecipesLoadedState(recipes: favRecipes));
     }catch(e){
       emit(RecipeErrorState(message: e.toString()));
     }

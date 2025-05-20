@@ -67,6 +67,7 @@ class HomeDbService implements InterfaceRepository{
     try{
       final recipes= _favoriteBox.values.toList();
       if(recipes.contains(id)){
+        removeFavorite(id);
         logger.d("Recipe already exists in favorites");
       }else{
         await _favoriteBox.add(id);
@@ -97,6 +98,7 @@ class HomeDbService implements InterfaceRepository{
     try{
       return _favoriteBox.values.toList();
     }catch (e){
+      logger.d("Error: $e");
       rethrow;
     }
   }
