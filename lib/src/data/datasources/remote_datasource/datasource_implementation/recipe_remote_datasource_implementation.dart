@@ -33,7 +33,6 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
     final bool isDataAvailable=await sl<HomeDbService>().isDataAvailable();
     try{
       if(isConnected){
-        // final response=await _client.get(Uri.https(kBaseUrl,recipesEndpoint));
         final response=await _client.get(Uri.https(kBaseUrl,recipesEndpoint,limit));
         logger.t(Uri.https(kBaseUrl,"$recipesEndpoint$limit"));
         if(response.statusCode!=200){
@@ -58,7 +57,7 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
         return List.from(jsonDecode(dbJson)).map((recipe)=>RecipeModel.fromMap(recipe)).toList();
       }else{
         logger.d(e);
-       throw(e);
+        rethrow;
       }
     }
   }
