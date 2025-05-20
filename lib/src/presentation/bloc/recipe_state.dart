@@ -37,6 +37,34 @@ class RecipeLoadedState extends RecipeState{
   List<Object?> get props => [recipe.id];
 }
 
+class GettingFavoriteRecipesState extends RecipeState{
+  const GettingFavoriteRecipesState();
+}
+
+class FavoriteRecipesLoadedState extends RecipeState{
+  final List favorites;
+  final List<Recipe> recipes;
+  const FavoriteRecipesLoadedState({required this.favorites, required this.recipes});
+}
+
+class AddingFavoriteState extends RecipeState{
+  final int id;
+  const AddingFavoriteState({required this.id});
+}
+
+class FavoriteAddedState extends RecipeState{
+  const FavoriteAddedState();
+}
+
+class RemovingFavoriteState extends RecipeState{
+  final int id;
+  const RemovingFavoriteState({required this.id});
+}
+
+class FavoriteRemovedState extends RecipeState{
+  const FavoriteRemovedState();
+}
+
 class RecipeErrorState extends RecipeState{
   final String message;
   const RecipeErrorState({required this.message});

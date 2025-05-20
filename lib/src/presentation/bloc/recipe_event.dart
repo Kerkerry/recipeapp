@@ -20,3 +20,18 @@ class GetRecipeEvent extends RecipeEvent{
   // TODO: implement props
   List<Object?> get props => [id];
 }
+
+class AddFavoriteEvent extends RecipeEvent{
+  final int id;
+  const AddFavoriteEvent(this.id);
+}
+
+class RemoveFavoriteEvent extends RecipeEvent{
+  final int id;
+  const RemoveFavoriteEvent(this.id);
+}
+
+class GetFavoriteEvent extends RecipeEvent{
+  const GetFavoriteEvent();
+}
+
