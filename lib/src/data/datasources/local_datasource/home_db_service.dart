@@ -65,8 +65,13 @@ class HomeDbService implements InterfaceRepository{
   @override
   Future addFavorite(int id) async{
     try{
-      await _favoriteBox.add(id);
-      logger.d("Success adding $id to favorite");
+      final recipes= _favoriteBox.values.toList();
+      if(recipes.contains(id)){
+        logger.d("Recipe already exists in favorites");
+      }else{
+        await _favoriteBox.add(id);
+        logger.d("Success adding $id to favorite");
+      }
     }catch (e){
       rethrow;
     }
