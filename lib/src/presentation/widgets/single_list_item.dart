@@ -1,32 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recipeapp/core/services/i_path.dart';
+import 'package:provider/provider.dart';
 import 'package:recipeapp/core/utils/custom_image_viewer.dart';
-import 'package:recipeapp/src/data/datasources/local_datasource/home_db_service.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
-import 'package:recipeapp/src/presentation/bloc/recipe_bloc.dart';
+import 'package:recipeapp/src/presentation/recipe_providers/recipes_provider.dart';
 import 'package:recipeapp/src/presentation/screens/recipe_detail_screen.dart';
 
-class RecipeListItem extends StatefulWidget {
+class RecipeListItem extends StatelessWidget {
   final Recipe recipe;
-  const RecipeListItem({super.key, required this.recipe});
+  final bool isAddedToFavorites;
+  const RecipeListItem({super.key, required this.recipe,required this.isAddedToFavorites});
 
-  @override
-  State<RecipeListItem> createState() => _RecipeListItemState();
-}
-
-class _RecipeListItemState extends State<RecipeListItem> {
-  final List _ids=[];
-  void getFavsIds()async{
-    final ids=await sl<HomeDbService>().getFavorites();
-    _ids.addAll(ids);
-  }
-
-  @override
-  void initState() {
-    getFavsIds();
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     Size size;
@@ -35,15 +18,11 @@ class _RecipeListItemState extends State<RecipeListItem> {
     height = size.height;
     width = size.width;
     final ThemeData theme = Theme.of(context);
-    return  BlocConsumer<RecipeBloc,RecipeState>(
-      listener: (context, state) {
 
-      },
-      builder: (context, state) {
         return InkWell(
           onTap: () =>
               Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                  RecipeDetailScreen(recipe: widget.recipe))),
+                  RecipeDetailScreen(recipe: recipe))),
           child: Container(
             margin: EdgeInsets.symmetric(
                 vertical: height * 0.02,
@@ -67,7 +46,7 @@ class _RecipeListItemState extends State<RecipeListItem> {
                         borderRadius: BorderRadius.circular(12)
                     ),
                     child: CustomImageViewer.show(
-                        context: context, url: widget.recipe.image),
+                        context: context, url: recipe.image),
                   ),
                   SizedBox(
                     width: width * 0.02,
@@ -81,7 +60,7 @@ class _RecipeListItemState extends State<RecipeListItem> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.recipe.name,
+                                recipe.name,
                                 style: theme.textTheme.titleLarge,
                               ),
                               const SizedBox(
@@ -99,7 +78,7 @@ class _RecipeListItemState extends State<RecipeListItem> {
                                       style: theme.textTheme.labelMedium,
                                     ),
                                     Text(
-                                      "${widget.recipe
+                                      "${recipe
                                           .caloriesPerServing} kcal",
                                       style: theme.textTheme.labelLarge,
                                     ),
@@ -121,7 +100,7 @@ class _RecipeListItemState extends State<RecipeListItem> {
                                       style: theme.textTheme.labelMedium,
                                     ),
                                     Text(
-                                      "${widget.recipe.prepTimeMinutes} mins",
+                                      "${recipe.prepTimeMinutes} mins",
                                       style: theme.textTheme.labelLarge,
                                     ),
                                   ],
@@ -140,7 +119,7 @@ class _RecipeListItemState extends State<RecipeListItem> {
                                       style: theme.textTheme.labelMedium,
                                     ),
                                     Text(
-                                      "${widget.recipe.cookTimeMinutes} mins",
+                                      "${recipe.cookTimeMinutes} mins",
                                       style: theme.textTheme.labelLarge,
                                     ),
                                   ],
@@ -174,7 +153,7 @@ class _RecipeListItemState extends State<RecipeListItem> {
                                   ),
                                 ),
                                 Text(
-                                  widget.recipe.cuisine,
+                                  recipe.cuisine,
                                   style: theme.textTheme.labelLarge,
                                 ),
                               ],
@@ -185,32 +164,16 @@ class _RecipeListItemState extends State<RecipeListItem> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
-                                  onPressed: () {
-                                    if (_ids.contains(widget.recipe.id)) {
-                                      sl<HomeDbService>().removeFavorite(widget.recipe.id);
-                                    } else {
-                                      sl<HomeDbService>().addFavorite(
-                                          widget.recipe.id);
-                                    }
-                                  },
-                                  icon: state is FavoriteRecipesLoadedState?
-                                  Icon(
-                                      _ids.contains(widget.recipe.id) ? Icons
-                                  .favorite : Icons.favorite_border,
-                                      color: Colors.red,):
-                                  state is FavoriteAddedState ?
-                                  Icon(
-                                      _ids.contains(widget.recipe.id) ? Icons
-                                          .favorite : Icons.favorite_border,
-                                          color: Colors.red,):
-                                  state is FavoriteRemovedState?
-                                  Icon(
-                                    _ids.contains(widget.recipe.id) ? Icons
-                                        .favorite : Icons.favorite_border,
-                                      color: Colors.red,):
-                                  const Icon(Icons.favorite_border, size: 35, color: Colors.red,)
+                                      onPressed: () {
+                                          context.read<RecipesProvider>().addOrRemoveFavorite(id: recipe.id);
+                                      },
+                                      icon:
+                                      Icon(
+                                        isAddedToFavorites? Icons
+                                            .favorite : Icons.favorite_border,
+                                        color: Colors.red,)
 
-                              )
+                                  )
                             ],
                           )
                         ],
@@ -221,8 +184,5 @@ class _RecipeListItemState extends State<RecipeListItem> {
             ),
           ),
         );
-
-      }
-    );
   }
 }

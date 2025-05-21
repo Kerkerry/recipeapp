@@ -96,7 +96,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               top: height*0.5,
                 left: width*0.1,
                 child: Container(
-                  // margin: EdgeInsets.only(bottom: width*0.1),
                   padding: EdgeInsets.symmetric(horizontal: width*0.05,vertical: width*0.03),
                   height: height*0.5,
                   width: width*0.8,

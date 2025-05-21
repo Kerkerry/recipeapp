@@ -7,6 +7,7 @@ import 'package:recipeapp/core/utils/custom_alert.dart';
 import 'package:recipeapp/core/utils/custom_loading_widget.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
 import 'package:recipeapp/src/presentation/bloc/recipe_bloc.dart';
+import 'package:recipeapp/src/presentation/recipe_providers/recipes_provider.dart';
 import 'package:recipeapp/src/presentation/screens/favorite_screen.dart';
 import 'package:recipeapp/src/presentation/widgets/b_n_b.dart';
 import 'package:recipeapp/src/presentation/widgets/single_list_item.dart';
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
+    final recipeProvider=context.watch<RecipesProvider>();
     return BlocConsumer<RecipeBloc,RecipeState>(
         builder: (context, state) {
           return Scaffold(
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                         itemCount: state.recipes.length,
                           itemBuilder: (context, index) {
                             final Recipe recipe=state.recipes[index];
-                            return RecipeListItem(recipe: recipe);
+                            return RecipeListItem(recipe: recipe,isAddedToFavorites: recipeProvider.favorites.contains(recipe.id),);
                           },
                       ):
             const SizedBox.shrink(),
