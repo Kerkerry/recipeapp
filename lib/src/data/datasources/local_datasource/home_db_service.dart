@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:recipeapp/core/errors/api_exception.dart';
-import 'package:recipeapp/core/errors/api_failure.dart';
 import 'package:recipeapp/core/helpers/hive_helper/db_keys.dart';
 import 'package:recipeapp/core/helpers/logger_helper.dart';
 import 'package:recipeapp/src/data/datasources/local_datasource/interface_repository.dart';

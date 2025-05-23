@@ -16,8 +16,9 @@ class GettingRecipesState extends RecipeState{
 
 class RecipesLoadedState extends RecipeState{
   final List<Recipe> recipes;
+  final List ids;
 
-  const RecipesLoadedState({required this.recipes});
+  const RecipesLoadedState({required this.recipes,required this.ids});
 
   @override
   // TODO: implement props
@@ -43,7 +44,8 @@ class GettingFavoriteRecipesState extends RecipeState{
 
 class FavoriteRecipesLoadedState extends RecipeState{
   final List recipes;
-  const FavoriteRecipesLoadedState({required this.recipes});
+  final List? ids;
+  const FavoriteRecipesLoadedState({required this.recipes,this.ids});
 }
 
 

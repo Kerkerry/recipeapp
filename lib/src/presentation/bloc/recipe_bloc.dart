@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:recipeapp/core/helpers/logger_helper.dart';
 import 'package:recipeapp/core/services/i_path.dart';
 import 'package:recipeapp/src/data/datasources/local_datasource/home_db_service.dart';
 import 'package:recipeapp/src/data/models/recipe_model.dart';
@@ -43,9 +41,13 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
   FutureOr<void> _getRecipesHandler(GetRecipesEvent event, Emitter<RecipeState> emit)async {
        emit(const GettingRecipesState());
        final result=await _getRecipes();
+       final  favs=await sl<HomeDbService>().getFavorites();
        result.fold(
                (f)=>emit(RecipeErrorState(message: f.errorMessage)),
-           (recipes)=>emit(RecipesLoadedState(recipes: recipes))
+           (recipes){
+
+                 emit(RecipesLoadedState(recipes: recipes,ids: favs));
+               }
        );
   }
 
@@ -70,7 +72,7 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
           favRecipes.add(RecipeModel.fromMap(recipe));
         }
       }
-      emit(FavoriteRecipesLoadedState(recipes: favRecipes));
+      emit(FavoriteRecipesLoadedState(recipes: favRecipes,ids: favs));
     }catch(e){
       emit(RecipeErrorState(message: e.toString()));
     }

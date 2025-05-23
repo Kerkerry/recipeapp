@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:iconly/iconly.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
 
 class RecipeDetailScreen extends StatefulWidget {

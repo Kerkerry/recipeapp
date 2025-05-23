@@ -1,5 +1,4 @@
 
-import 'package:recipeapp/src/domain/entities/recipe.dart';
 
 abstract class InterfaceRepository{
   const InterfaceRepository();

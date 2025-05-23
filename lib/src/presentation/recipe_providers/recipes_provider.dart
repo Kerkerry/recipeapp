@@ -1,6 +1,8 @@
 
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 import 'package:recipeapp/core/helpers/logger_helper.dart';
 import 'package:recipeapp/core/services/i_path.dart';
 import 'package:recipeapp/src/data/datasources/local_datasource/home_db_service.dart';
@@ -11,10 +13,10 @@ class RecipesProvider extends ChangeNotifier{
   final List<Recipe> _favRecipes=[];
    List _favorites=[];
 
-    bool _favoriteAdded=false;
+    final bool _favoriteAdded=false;
 
-   List<Recipe> get favRecipes=>_favRecipes;
-   List get favorites=>_favorites;
+   UnmodifiableListView<Recipe> get favRecipes=>UnmodifiableListView(_favRecipes);
+   UnmodifiableListView get favorites=>UnmodifiableListView(_favorites);
    bool get favoriteAdded=>_favoriteAdded;
 
   Future getFavRecipes()async{
@@ -22,9 +24,20 @@ class RecipesProvider extends ChangeNotifier{
     final List recipes=await sl<HomeDbService>().getAll();
     for(final recipe in recipes){
       if(_favorites.contains(recipe['id'])){
-        _favRecipes.add(RecipeModel.fromMap(recipe));
+          final jsonRecipe=jsonEncode(recipe);
+        _favRecipes.add(RecipeModel.fromMap(jsonDecode(jsonRecipe)));
+        notifyListeners();
       }
     }
+  }
+
+  void addFavorite({required int id})async{
+    await sl<HomeDbService>().addFavorite(id);
+    notifyListeners();
+  }
+
+  void removeFavorite({required int id})async{
+    await sl<HomeDbService>().removeFavorite(id);
     notifyListeners();
   }
 
@@ -32,12 +45,11 @@ class RecipesProvider extends ChangeNotifier{
     if(_favoriteAdded){
       logger.d(_favorites);
       await sl<HomeDbService>().removeFavorite(id);
-      getFavRecipes();
+      notifyListeners();
     }else{
         logger.d(_favorites);
         await sl<HomeDbService>().addFavorite(id);
-        getFavRecipes();
+        notifyListeners();
     }
-    notifyListeners();
   }
 }

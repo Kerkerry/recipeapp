@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                         itemCount: state.recipes.length,
                           itemBuilder: (context, index) {
                             final Recipe recipe=state.recipes[index];
-                            return RecipeListItem(recipe: recipe,isAddedToFavorites: recipeProvider.favorites.contains(recipe.id),);
+                            return RecipeListItem(recipe: recipe,ids: state.ids,);
                           },
                       ):
             const SizedBox.shrink(),
@@ -93,6 +93,12 @@ class _HomePageState extends State<HomePage> {
             final bool isConnected=await sl<InternetConnectionHelper>().checkConnection();
             final String serverType=isConnected ? "Fetched $recipes recipes from remote server": "Fetched $recipes recipes from local server";
             context.mounted?CustomAlert.show(context, serverType):null;
+          }
+          if(state is FavoriteAddedState){
+            fetchRecipes();
+          }
+          if(state is FavoriteRemovedState){
+            fetchRecipes();
           }
         },
 

@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:recipeapp/core/helpers/hive_helper/recipe_hive_fields.dart';
 

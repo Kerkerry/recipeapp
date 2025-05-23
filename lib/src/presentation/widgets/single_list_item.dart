@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipeapp/core/utils/custom_image_viewer.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
+import 'package:recipeapp/src/presentation/bloc/recipe_bloc.dart';
 import 'package:recipeapp/src/presentation/recipe_providers/recipes_provider.dart';
 import 'package:recipeapp/src/presentation/screens/recipe_detail_screen.dart';
 
 class RecipeListItem extends StatelessWidget {
   final Recipe recipe;
-  final bool isAddedToFavorites;
-  const RecipeListItem({super.key, required this.recipe,required this.isAddedToFavorites});
+  final List ids;
+  const RecipeListItem({super.key, required this.recipe, required this.ids});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class RecipeListItem extends StatelessWidget {
     height = size.height;
     width = size.width;
     final ThemeData theme = Theme.of(context);
-
+    final recipeProvider=context.watch<RecipesProvider>();
         return InkWell(
           onTap: () =>
               Navigator.push(context, MaterialPageRoute(builder: (context) =>
@@ -164,16 +165,15 @@ class RecipeListItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
-                                      onPressed: () {
-                                          context.read<RecipesProvider>().addOrRemoveFavorite(id: recipe.id);
-                                      },
-                                      icon:
-                                      Icon(
-                                        isAddedToFavorites? Icons
-                                            .favorite : Icons.favorite_border,
-                                        color: Colors.red,)
-
-                                  )
+                                  onPressed: (){
+                                    if(ids.contains(recipe.id)){
+                                      context.read<RecipeBloc>().add(RemoveRecipeFavoriteEvent(recipe.id));
+                                    }else{
+                                      context.read<RecipeBloc>().add(AddRecipeFavoriteEvent(recipe.id));
+                                    }
+                                  },
+                                icon:  Icon(ids.contains(recipe.id)?Icons.favorite:Icons.favorite_border,color: Colors.red,)
+                              )
                             ],
                           )
                         ],
