@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:recipeapp/core/services/i_path.dart';
@@ -55,7 +56,15 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
        try{
          emit(const AddingFavoriteState());
          await sl<HomeDbService>().addFavorite(event.id);
-         emit(const FavoriteAddedState());
+         final result=await _getRecipes();
+         final  favs=await sl<HomeDbService>().getFavorites();
+         result.fold(
+                 (f)=>emit(RecipeErrorState(message: f.errorMessage)),
+                 (recipes){
+
+               emit(FavoriteAddedState(recipes: recipes,ids: favs));
+             }
+         );
        }catch(e){
          emit(RecipeErrorState(message: e.toString()));
        }
@@ -69,7 +78,8 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
       final List<Recipe> favRecipes=[];
       for(final recipe in recipes){
         if(favs.contains(recipe['id'])){
-          favRecipes.add(RecipeModel.fromMap(recipe));
+          final favJson=jsonEncode(recipe);
+          favRecipes.add(RecipeModel.fromMap(jsonDecode(favJson)));
         }
       }
       emit(FavoriteRecipesLoadedState(recipes: favRecipes,ids: favs));
@@ -82,7 +92,15 @@ class RecipeBloc extends Bloc<RecipeEvent,RecipeState>{
        try{
          emit(const RemovingFavoriteState());
          await sl<HomeDbService>().removeFavorite(event.id);
-         emit(const FavoriteRemovedState());
+         final result=await _getRecipes();
+         final  favs=await sl<HomeDbService>().getFavorites();
+         result.fold(
+                 (f)=>emit(RecipeErrorState(message: f.errorMessage)),
+                 (recipes){
+
+               emit(FavoriteRemovedState(recipes: recipes,ids: favs));
+             }
+         );
        }catch(e){
          emit(RecipeErrorState(message: e.toString()));
        }

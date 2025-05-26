@@ -53,7 +53,9 @@ class AddingFavoriteState extends RecipeState{
   const AddingFavoriteState();
 }
 class FavoriteAddedState extends RecipeState{
-  const FavoriteAddedState();
+  final List<Recipe> recipes;
+  final List? ids;
+  const FavoriteAddedState({required this.recipes,this.ids});
 }
 
 class RemovingFavoriteState extends RecipeState{
@@ -61,7 +63,9 @@ class RemovingFavoriteState extends RecipeState{
 }
 
 class FavoriteRemovedState extends RecipeState{
-  const FavoriteRemovedState();
+  final List<Recipe> recipes;
+  final List? ids;
+  const FavoriteRemovedState({required this.recipes,this.ids});
 }
 
 class RecipeErrorState extends RecipeState{
