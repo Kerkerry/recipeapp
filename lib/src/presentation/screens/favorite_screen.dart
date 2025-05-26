@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:recipeapp/core/helpers/logger_helper.dart';
 
 import 'package:recipeapp/core/utils/custom_loading_widget.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
 import 'package:recipeapp/src/presentation/bloc/recipe_bloc.dart';
+import 'package:recipeapp/src/presentation/screens/home_screen.dart';
 import 'package:recipeapp/src/presentation/widgets/single_list_item.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -31,6 +33,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: ()=>context.go('/'),
+          icon:const Icon(Icons.arrow_back_ios),
+        ),
         title: const Text("Favorite recipes"),
       ),
       body: BlocConsumer<RecipeBloc,RecipeState>(

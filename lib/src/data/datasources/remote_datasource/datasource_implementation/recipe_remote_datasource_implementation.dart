@@ -16,6 +16,8 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
 
   @override
   Future<Recipe> getRecipe({required int id})async {
+    final bool isConnected=await sl<InternetConnectionHelper>().checkConnection();
+    final bool isDataAvailable=await sl<HomeDbService>().isDataAvailable();
     try{
       final response=await _client.get(Uri.https(kBaseUrl,"$recipesEndpoint/$id"));
       if(response.statusCode !=200){

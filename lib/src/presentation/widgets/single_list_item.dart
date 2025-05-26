@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:recipeapp/core/utils/custom_image_viewer.dart';
 import 'package:recipeapp/src/domain/entities/recipe.dart';
@@ -21,9 +24,7 @@ class RecipeListItem extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final recipeProvider=context.watch<RecipesProvider>();
         return InkWell(
-          onTap: () =>
-              Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                  RecipeDetailScreen(recipe: recipe))),
+          onTap: () =>context.go('/details/${recipe.id}'),
           child: Container(
             margin: EdgeInsets.symmetric(
                 vertical: height * 0.02,

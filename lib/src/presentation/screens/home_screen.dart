@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:recipeapp/core/helpers/internet_connection_helper.dart';
 import 'package:recipeapp/core/services/i_path.dart';
 import 'package:recipeapp/core/utils/custom_alert.dart';
@@ -94,9 +95,7 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox.shrink(),
             bottomNavigationBar:const BNB(),
             floatingActionButton: FloatingActionButton(
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>const FavoriteScreen()));
-              },
+              onPressed: ()=>context.go('/favorites'),
               child:const Icon(Icons.favorite,color: Colors.red),
             ),
           );
