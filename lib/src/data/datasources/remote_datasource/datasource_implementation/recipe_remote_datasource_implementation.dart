@@ -19,11 +19,14 @@ class RecipeRemoteDatasourceImplementation implements RecipeRemoteDatasource{
     final bool isConnected=await sl<InternetConnectionHelper>().checkConnection();
     final bool isDataAvailable=await sl<HomeDbService>().isDataAvailable();
     try{
-      final response=await _client.get(Uri.https(kBaseUrl,"$recipesEndpoint/$id"));
-      if(response.statusCode !=200){
-        throw(ApiException(statusCode: response.statusCode,message: response.body));
-      }
-      return RecipeModel.fromMap(jsonDecode(response.body));
+     if(isConnected){
+       final response=await _client.get(Uri.https(kBaseUrl,"$recipesEndpoint/$id"));
+       if(response.statusCode !=200){
+         throw(ApiException(statusCode: response.statusCode,message: response.body));
+       }
+       return RecipeModel.fromMap(jsonDecode(response.body));
+     }
+     return RecipeModel.empty();
     } catch(e){
       throw(ApiException(statusCode: 505,message: e.toString()));
     }
